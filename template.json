@@ -2,45 +2,43 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "components_name": {
+        "webapp_name": {
             "defaultValue": "managedfunctionsdev",
             "type": "String"
-        },
-        "storageAccounts_name": {
-            "defaultValue": "[concat('sa',parameters('components_name'))]",
+        }
+    },
+    "variables": {
+        "storageAccount_name": {
+            "defaultValue": "[concat('sa',parameters('webapp_name'))]",
             "type": "String"
         },
-        "serverfarms_Plan_name": {
-            "defaultValue": "WestEuropePlan",
-            "type": "String"
-        },
-        "sites_name": {
-            "defaultValue": "[parameters('components_name')]",
+        "serverfarm_Plan_name": {
+            "defaultValue": "[concat(parameters('webapp_name'), 'Plan')]",
             "type": "String"
         },
         "config_web_name": {
-            "defaultValue": "[concat(parameters('components_name'), '/web')]",
+            "defaultValue": "[concat(parameters('webapp_name'), '/web')]",
             "type": "String"
         },
         "azure_region": {
             "defaultValue": "westeurope",
             "type": "String"
-        }
+        },
+        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccount_name'))]"
 
     },
-    "variables": {},
     "resources": [
         {
             "comments": "",
             "type": "microsoft.insights/components",
             "kind": "web",
-            "name": "[parameters('components_name')]",
+            "name": "[parameters('webapp_name')]",
             "apiVersion": "2014-04-01",
-            "location": "[parameters('azure_region')]",
+            "location": "[variables('azure_region')]",
             "tags": { },
             "scale": null,
             "properties": {
-                "ApplicationId": "[parameters('components_name')]"
+                "ApplicationId": "[parameters('webapp_name')]"
             },
             "dependsOn": []
         },
@@ -52,7 +50,7 @@
                 "tier": "Standard"
             },
             "kind": "Storage",
-            "name": "[parameters('storageAccounts_name')]",
+            "name": "[variables('storageAccount_name')]",
             "apiVersion": "2016-01-01",
             "location": "westeurope",
             "tags": {},
@@ -71,57 +69,89 @@
                 "capacity": 0
             },
             "kind": "functionapp",
-            "name": "[parameters('serverfarms_Plan_name')]",
+            "name": "[variables('serverfarm_Plan_name')]",
             "apiVersion": "2015-08-01",
             "location": "West Europe",
             "scale": null,
             "properties": {
-                "name": "[parameters('serverfarms_Plan_name')]",
+                "name": "[variables('serverfarm_Plan_name')]",
                 "numberOfWorkers": 0
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarm_Plan_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccount_name'))]"                
+            ]
         },
         {
             "comments": "Azure App Website",
             "type": "Microsoft.Web/sites",
             "kind": "functionapp",
-            "name": "[parameters('sites_name')]",
+            "name": "[parameters('webapp_name')]",
             "apiVersion": "2015-08-01",
-            "location": "West Europe",
+            "location": "[resourceGroup().location]",
             "scale": null,
             "properties": {
-                "name": "[parameters('sites_name')]",
+                "name": "[parameters('webapp_name')]",
                 "hostNames": [
-                    "[concat(parameters('sites_name'),'.azurewebsites.net')]"
+                    "[concat(parameters('webapp_name'),'.azurewebsites.net')]"
                 ],
                 "enabledHostNames": [
-                    "[concat(parameters('sites_name'),'.azurewebsites.net')]",
-                    "[concat(parameters('sites_name'),'.scm.azurewebsites.net')]"
+                    "[concat(parameters('webapp_name'),'.azurewebsites.net')]",
+                    "[concat(parameters('webapp_name'),'.scm.azurewebsites.net')]"
                 ],
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('sites_name'),'.azurewebsites.net')]",
+                        "name": "[concat(parameters('webapp_name'),'.azurewebsites.net')]",
                         "sslState": 0,
                         "thumbprint": null,
                         "ipBasedSslState": 0
                     },
                     {
-                        "name": "[concat(parameters('sites_name'),'.scm.azurewebsites.net')]",
+                        "name": "[concat(parameters('webapp_name'),'.scm.azurewebsites.net')]",
                         "sslState": 0,
                         "thumbprint": null,
                         "ipBasedSslState": 0
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_Plan_name'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarm_Plan_name'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccount_name'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccount_name'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccount_name'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(parameters('webapp_name'))]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~1"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "6.5.0"
+                        }
+                    ]
+                }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_Plan_name'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarm_Plan_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccount_name'))]"                
             ]
         },
         {
             "comments": "Azure App Website config",
             "type": "Microsoft.Web/sites/config",
-            "name": "[parameters('config_web_name')]",
+            "name": "[variables('config_web_name')]",
             "apiVersion": "2015-08-01",
             "location": "West Europe",
             "scale": null,
@@ -232,7 +262,7 @@
                 "ipSecurityRestrictions": null
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('webapp_name'))]"
             ]
         }
     ]

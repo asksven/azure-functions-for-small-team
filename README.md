@@ -15,9 +15,10 @@ The environment is easily create from the Azure CLI 2.0 in the portal.
 3. Check that you are in the right subscription: `az account show`
 4. Check if the resource group exists: `az group exists --name <rg-name>` (should return `false`)
 5. Create the resource group: `az group create --name <rg-name> --location westeurope`
-6. Validate deployment: `az group deployment validate -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
-7. Check if the functions webapp does not exist: `wget http://<value-of-components_name-from-template.json>` (if it exists you must change the name of the web-app in the ARM template and re-test) should return `unable to resolve`. *If the web-site exists already the validation will not detect it but the deployment will fail!*
-6. Deploy using the ARM template: `az group deployment create -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
+6. At this point you can either refer to github project with `--template-uri` or run everything locally as the Azure CLI has a git client
+7. Validate deployment: `az group deployment validate -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
+8. Check if the functions webapp does not exist: `wget http://<value-of-components_name-from-template.json>` (if it exists you must change the name of the web-app in the ARM template and re-test) should return `unable to resolve`. *If the web-site exists already the validation will not detect it but the deployment will fail!*
+9. Deploy using the ARM template: `az group deployment create -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
 
 ## Deployment
 The Azure Function App is configured for continous deployment from github, using a branch per deployment tier:

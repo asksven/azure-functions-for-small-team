@@ -2,24 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "components_msaas_dev_name": {
+        "webapp_name": {
             "value": null
-        },
-        "storageAccounts_samsaasdev_name": {
-            "value": null
-        },
-        "serverfarms_WestEuropePlan_name": {
-            "value": null
-        },
-        "sites_msaas_dev_name": {
-            "value": null
-        },
-        "config_web_name": {
-            "value": null
-        },
-        "azure_region": {
-            "defaultValue": "westeurope",
-            "type": "String"
         }
     }
 }
