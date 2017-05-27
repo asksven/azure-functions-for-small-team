@@ -65,7 +65,6 @@
                 "numberOfWorkers": 0
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarm_Plan_name'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccount_name'))]"                
             ]
         },
