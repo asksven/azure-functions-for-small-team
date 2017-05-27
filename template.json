@@ -25,7 +25,7 @@
             "type": "String"
         },
         "storageAccount_id": {
-            "defaultValue": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccount_name'))]"
+            "defaultValue": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccount_name'))]",
             "type": "String"
         }
 
