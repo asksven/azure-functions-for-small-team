@@ -1,4 +1,4 @@
-# MSaaS (MicroService as a Service)
+# Azure Function Apps hosting for small teams
 
 ## Azure Enviroment
 The Azure enviroment consists of:
@@ -19,6 +19,7 @@ The environment is easily create from the Azure CLI 2.0 in the portal.
 7. Validate deployment: `az group deployment validate -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
 8. Check if the functions webapp does not exist: `wget http://<value-of-components_name-from-template.json>` (if it exists you must change the name of the web-app in the ARM template and re-test) should return `unable to resolve`. *If the web-site exists already the validation will not detect it but the deployment will fail!*
 9. Deploy using the ARM template: `az group deployment create -g <rg-name> --template-uri https://raw.githubusercontent.com/asksven/azure-functions-for-small-team/master/template.json --verbose`
+10. go to the Azure functions all, disconnect and re-connect the github deployment
 
 ## Deployment
 The Azure Function App is configured for continous deployment from github, using a branch per deployment tier:
