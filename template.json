@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "components_name": {
-            "defaultValue": "managedfunctions-dev",
+            "defaultValue": "managedfunctionsdev",
             "type": "String"
         },
         "storageAccounts_name": {
