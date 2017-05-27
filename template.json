@@ -92,7 +92,7 @@
             "properties": {
                 "name": "[parameters('sites_name')]",
                 "hostNames": [
-                    "msaas-dev.azurewebsites.net"
+                    "[concat(parameters('sites_name'),'.azurewebsites.net')]"
                 ],
                 "enabledHostNames": [
                     "[concat(parameters('sites_name'),'.azurewebsites.net')]",
