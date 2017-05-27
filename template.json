@@ -95,8 +95,8 @@
                     "msaas-dev.azurewebsites.net"
                 ],
                 "enabledHostNames": [
-                    "msaas-dev.azurewebsites.net",
-                    "msaas-dev.scm.azurewebsites.net"
+                    "[concat(parameters('sites_name'),'.azurewebsites.net')]",
+                    "[concat(parameters('sites_name'),'.scm.azurewebsites.net')]"
                 ],
                 "hostNameSslStates": [
                     {
@@ -149,7 +149,7 @@
                 "httpLoggingEnabled": false,
                 "logsDirectorySizeLimit": 35,
                 "detailedErrorLoggingEnabled": false,
-                "publishingUsername": "$msaas-dev",
+                "publishingUsername": "username",
                 "publishingPassword": null,
                 "appSettings": null,
                 "metadata": null,
