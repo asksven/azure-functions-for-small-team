@@ -8,26 +8,10 @@
         }
     },
     "variables": {
-        "storageAccount_name": {
-            "defaultValue": "[concat('sa',parameters('webapp_name'))]",
-            "type": "String"
-        },
-        "serverfarm_Plan_name": {
-            "defaultValue": "[concat(parameters('webapp_name'), 'Plan')]",
-            "type": "String"
-        },
-        "config_web_name": {
-            "defaultValue": "[concat(parameters('webapp_name'), '/web')]",
-            "type": "String"
-        },
-        "azure_region": {
-            "defaultValue": "westeurope",
-            "type": "String"
-        },
-        "storageAccount_id": {
-            "defaultValue": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccount_name'))]",
-            "type": "String"
-        }
+        "storageAccount_name": "[concat('sa',parameters('webapp_name'))]",
+        "serverfarm_Plan_name": "[concat(parameters('webapp_name'), 'Plan')]",
+        "config_web_name": "[concat(parameters('webapp_name'), '/web')]",
+        "storageAccount_id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccount_name'))]"
 
     },
     "resources": [
@@ -37,7 +21,7 @@
             "kind": "web",
             "name": "[parameters('webapp_name')]",
             "apiVersion": "2014-04-01",
-            "location": "[variables('azure_region')]",
+            "location": "[resourceGroup().location]",
             "tags": { },
             "scale": null,
             "properties": {
@@ -55,7 +39,7 @@
             "kind": "Storage",
             "name": "[variables('storageAccount_name')]",
             "apiVersion": "2016-01-01",
-            "location": "westeurope",
+            "location": "[resourceGroup().location]",
             "tags": {},
             "scale": null,
             "properties": {},
@@ -156,7 +140,7 @@
             "type": "Microsoft.Web/sites/config",
             "name": "[variables('config_web_name')]",
             "apiVersion": "2015-08-01",
-            "location": "West Europe",
+            "location": "resourceGroup().location",
             "scale": null,
             "properties": {
                 "numberOfWorkers": 1,
