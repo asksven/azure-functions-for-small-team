@@ -7,7 +7,7 @@
             "type": "String"
         },
         "storageAccounts_name": {
-            "defaultValue": "[concat('sa',parameters('component_name'))]",
+            "defaultValue": "[concat('sa',parameters('components_name'))]",
             "type": "String"
         },
         "serverfarms_Plan_name": {
@@ -19,7 +19,7 @@
             "type": "String"
         },
         "config_web_name": {
-            "defaultValue": "[concat(parameters('component_name'), '/web')]",
+            "defaultValue": "[concat(parameters('components_name'), '/web')]",
             "type": "String"
         },
         "azure_region": {
