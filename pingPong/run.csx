@@ -1,4 +1,7 @@
+using System;
 using System.Net;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
@@ -8,6 +11,6 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 #    log.Info("Request Content" + req.Content.ToString());
     string jsonContent = await req.Content.ReadAsStringAsync();
     log.Info("Request: " + jsonContent);
-    
+
     return req.CreateResponse(HttpStatusCode.OK, "pong");
 }
