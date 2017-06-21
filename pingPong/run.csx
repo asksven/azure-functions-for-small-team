@@ -7,7 +7,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 #    log.Info("Request Properties" + req.Properties.ToString());
 #    log.Info("Request Content" + req.Content.ToString());
     string documentContents;
-    using (Stream receiveStream = Request.InputStream)
+    using (Stream receiveStream = req.InputStream)
     {
         using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
         {
